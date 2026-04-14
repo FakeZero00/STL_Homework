@@ -2,10 +2,23 @@
 #include <fstream>
 #include <print>
 #include <array>
+#include <ranges>
 using namespace std;
 
 class Player
 {
+public:
+	void read(ifstream& in)
+	{
+		in.read((char*)this, sizeof(Player) - sizeof(p));
+
+		in.seekg(sizeof(p), ios::cur);
+
+		if (num > 0) {
+			p = make_unique<char[]>(num);
+			in.read(p.get(), num);
+		}
+	}
 private:
 	string name;			// 이름, 길이[3, 15], ['a', 'z']로만 구성
 	int score;				// 점수, 정규분포
@@ -15,8 +28,8 @@ private:
 
 	friend ostream& operator<<(ostream& os, const Player& player)
 	{
-		print("이름: {:15}, 아이디: {}, 점수: {}, 자원수: {}\n저장된 글자:",
-			player.name, player.score, player.id, player.num);
+		print("이름: {:15}, 아이디: {}, 점수: {}, 자원수: {}\n저장된 글자:{}",
+			player.name, player.score, player.id, player.num, player.p.get());
 		return os;
 	}
 };
@@ -32,7 +45,6 @@ int main()
 		return 2022182034;
 	}
 
-	in.read((char*)playerArr.data(), sizeof(Player) * playerArr.size());
-	cout << playerArr[0] << endl;
-	cout << playerArr[1] << endl;
+	for(auto& player : playerArr)
+		player.read(in);
 }
