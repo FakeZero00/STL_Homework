@@ -28,7 +28,7 @@ private:
 
 	friend ostream& operator<<(ostream& os, const Player& player)
 	{
-		print("이름: {:15}, 아이디: {}, 점수: {}, 자원수: {}\n저장된 글자:{}",
+		print(os, "이름: {:15}, 아이디: {}, 점수: {}, 자원수: {}\n저장된 글자:{}\n",
 			player.name, player.score, player.id, player.num, player.p.get());
 		return os;
 	}
@@ -47,4 +47,7 @@ int main()
 
 	for(auto& player : playerArr)
 		player.read(in);
+
+	for (const auto& player : playerArr | views::take(10000))
+		cout << player << endl;
 }
