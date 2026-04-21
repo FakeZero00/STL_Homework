@@ -60,13 +60,47 @@ private:
 	friend ostream& operator<<(ostream& os, const Player& player)
 	{
 		print(os, "이름: {:15}, 아이디: {}, 점수: {}, 자원수: {}\n저장된 글자:{}",
-			player.name, player.score, player.id, player.num, player.p.get());
+			player.name, player.id, player.score, player.num, player.p.get());
 		return os;
 	}
+};
 
+struct PlayerIdComp {
+	bool operator()(const Player& a, const Player& b) const { return a.getId() < b.getId(); }
+	bool operator()(const Player& a, const size_t& b) const { return a.getId() < b; }
+	bool operator()(const size_t& a, const Player& b) const { return a < b.getId(); }
 };
 
 array<Player, 300'0000> playerArr{};
+
+void printIdx(const auto& firstIdx, const auto& lastIdx)
+{
+	if (firstIdx != lastIdx){
+		if (firstIdx != playerArr.begin()) {
+			cout << *(firstIdx - 1) << endl;
+		}
+		else cout << "입력하신 id가 제일 앞의 객체입니다." << endl;
+		for (auto i = firstIdx; i != lastIdx; ++i) {
+			cout << *i << endl;
+		}
+		if (lastIdx != playerArr.end()) {
+			cout << *lastIdx << endl;
+		}
+		else cout << "입력하신 id가 마지막 객체입니다." << endl;
+	}
+	else cout << "해당하는 id를 찾을 수 없습니다." << endl;
+}
+
+void printIdx(const auto& searchPlayer)
+{
+	if (searchPlayer != playerArr.begin()){
+		cout << *(searchPlayer - 1) << endl;
+	}
+	cout << *searchPlayer << endl;
+	if (searchPlayer != playerArr.end()) {
+		cout << *(searchPlayer + 1) << endl;
+	}
+}
 
 int main()
 {
@@ -81,74 +115,74 @@ int main()
 		player.read(in);
 
 	//1번 문제
-	//cout << "1번 문제:\n파일에 저장한 모든 Player 정보를 읽어 컨테이너에 저장하라. 제일 마지막 Player의 정보를 다음과 같은 형식으로 화면에 출력하라." << endl;
-	//cout << "[답]" << endl;
-	//cout << playerArr.back() << endl;
+	cout << "1번 문제:\n파일에 저장한 모든 Player 정보를 읽어 컨테이너에 저장하라. 제일 마지막 Player의 정보를 다음과 같은 형식으로 화면에 출력하라." << endl;
+	cout << "[답]" << endl;
+	cout << playerArr.back() << endl;
 
-	//cout << "\n=========================================\n" << endl;
+	cout << "\n=========================================\n" << endl;
 
-	////2번 문제
-	//cout << "2번 문제:\n점수가 가장 큰 Player를 찾아 화면에 출력하라.(동점 모두 출력) Player의 평균 점수를 계산하여 화면에 출력하라." << endl;
-	//cout << "[답]" << endl;
-	//auto maxPtr = max_element(playerArr.begin(), playerArr.end(), [](const Player& a, const Player& b) {
-	//	return a.getScore() < b.getScore();
-	//	});
-	//int maxScore = maxPtr->getScore();
-	//cout << "최고 점수: " << maxScore << endl;
-	//cout << "최고 점수를 받은 Player들:" << endl;
-	//for (const auto& player : playerArr | views::filter([maxScore](const Player& a) {
-	//	return a.getScore() == maxScore;
-	//	}))
-	//{
-	//	cout << player << endl;
-	//}
-	//long long averageScore = accumulate(playerArr.begin(), playerArr.end(), 0LL, [](long long sum, Player& player) {
-	//	return sum + player.getScore();
-	//	}) / playerArr.size();
-	//cout << "평균 점수: " << averageScore << endl;
+	//2번 문제
+	cout << "2번 문제:\n점수가 가장 큰 Player를 찾아 화면에 출력하라.(동점 모두 출력) Player의 평균 점수를 계산하여 화면에 출력하라." << endl;
+	cout << "[답]" << endl;
+	auto maxPtr = max_element(playerArr.begin(), playerArr.end(), [](const Player& a, const Player& b) {
+		return a.getScore() < b.getScore();
+		});
+	int maxScore = maxPtr->getScore();
+	cout << "최고 점수: " << maxScore << endl;
+	cout << "최고 점수를 받은 Player들:" << endl;
+	for (const auto& player : playerArr | views::filter([maxScore](const Player& a) {
+		return a.getScore() == maxScore;
+		}))
+	{
+		cout << player << endl;
+	}
+	long long averageScore = accumulate(playerArr.begin(), playerArr.end(), 0LL, [](long long sum, Player& player) {
+		return sum + player.getScore();
+		}) / playerArr.size();
+	cout << "평균 점수: " << averageScore << endl;
 
-	//cout << "\n=========================================\n" << endl;
+	cout << "\n=========================================\n" << endl;
 
-	////3번 문제
-	//cout << "3번 문제:\nid가 서로 같은 객체를 찾아 \"같은아이디.txt\"에 기록하라. id가 같은 객체는 모두 몇 개인지 화면에 출력하라. 파일에는 id가 같은 Player 객체의 이름과 아이디를 한 줄 씩 기록한다." << endl;
-	//cout << "[답]" << endl;
-	//unordered_map<size_t, vector<size_t>> idMap;
-	//for (size_t i = 0; i < playerArr.size(); ++i) {
-	//	idMap[playerArr[i].getId()].push_back(i);
-	//}
+	//3번 문제
+	cout << "3번 문제:\nid가 서로 같은 객체를 찾아 \"같은아이디.txt\"에 기록하라. id가 같은 객체는 모두 몇 개인지 화면에 출력하라. 파일에는 id가 같은 Player 객체의 이름과 아이디를 한 줄 씩 기록한다." << endl;
+	cout << "[답]" << endl;
+	unordered_map<size_t, vector<size_t>> idMap;
+	for (size_t i = 0; i < playerArr.size(); ++i) {
+		idMap[playerArr[i].getId()].push_back(i);
+	}
 
-	//ofstream out{ "같은아이디.txt" };
-	//size_t duplicateCount = 0;
-	//for (const auto& [id, playerIndices] : idMap) {
-	//	if (playerIndices.size() > 1) {
-	//		duplicateCount += playerIndices.size();
-	//		out << "ID: " << id << "->" << playerIndices.size() << "개" << endl;
-	//		for (size_t index : playerIndices) {
-	//			out << "이름: " << playerArr[index].getName() << ", 아이디: " << id << endl;
-	//		}
-	//		out << "==============================" << endl;
-	//	}
-	//}
-	//cout << "id가 같은 객체는 총 " << duplicateCount << "개" << endl;
+	ofstream out{ "같은아이디.txt" };
+	size_t duplicateCount = 0;
+	for (const auto& [id, playerIndices] : idMap) {
+		if (playerIndices.size() > 1) {
+			duplicateCount += playerIndices.size();
+			out << "ID: " << id << "->" << playerIndices.size() << "개" << endl;
+			for (size_t index : playerIndices) {
+				out << "이름: " << playerArr[index].getName() << ", 아이디: " << id << endl;
+			}
+			out << "==============================" << endl;
+		}
+	}
+	cout << "id가 같은 객체는 총 " << duplicateCount << "개" << endl;
 
-	//cout << "\n=========================================\n" << endl;
+	cout << "\n=========================================\n" << endl;
 
-	////4번 문제
-	//cout << "4번 문제:" << endl;
-	//cout << "Player의 멤버 p가 가리키는 메모리에는 파일에서 읽은 num개의 char가 저장되어 있어야 한다." << endl;
-	//cout << "메모리에 저장된 char를 오름차순으로 정렬하라." << endl;
-	//cout << "\'0\'부터 \'9\'까지 모든 숫자가 있는 Player를 찾아 모두 몇 객체인지 출력하라." << endl;
-	//cout << "[답]" << endl;
+	//4번 문제
+	cout << "4번 문제:" << endl;
+	cout << "Player의 멤버 p가 가리키는 메모리에는 파일에서 읽은 num개의 char가 저장되어 있어야 한다." << endl;
+	cout << "메모리에 저장된 char를 오름차순으로 정렬하라." << endl;
+	cout << "\'0\'부터 \'9\'까지 모든 숫자가 있는 Player를 찾아 모두 몇 객체인지 출력하라." << endl;
+	cout << "[답]" << endl;
 
-	//string digits = "0123456789";
-	//int totalPlayer = 0;
+	string digits = "0123456789";
+	int totalPlayer = 0;
 
-	//for (Player& player : playerArr) {
-	//	player.charSort();
-	//	if (player.isChar(digits))
-	//		++totalPlayer;
-	//}
-	//cout << "0 ~ 9가 모두 있는 객체의 수: " << totalPlayer << endl;
+	for (Player& player : playerArr) {
+		player.charSort();
+		if (player.isChar(digits))
+			++totalPlayer;
+	}
+	cout << "0 ~ 9가 모두 있는 객체의 수: " << totalPlayer << endl;
 
 	cout << "\n=========================================\n" << endl;
 	//5번 문제
@@ -161,17 +195,48 @@ int main()
 
 	size_t targetId;
 
-	cout << "id를 입력해주세요: ";
-	cin >> targetId;
+	while (1) {
+		cout << "\n------------------------LOOP 시작------------------------\n" << endl;
+		cout << "id를 입력해주세요: ";	//127323
+		cin >> targetId;
 
-	cout << "id 기준으로 정렬합니다..." << endl;
-	sort(playerArr.begin(), playerArr.end(), [](Player& a, Player& b) {
-		return a.getId() < b.getId();
-		});
-	cout << "정렬을 완료했습니다." << endl;
-	auto searchPlayer = find_if(playerArr.begin(), playerArr.end(), [targetId](const Player& player) {
-		return player.getId() == targetId;
-		});
+		cout << "=============ID기준 정렬===============" << endl;
+		cout << "id 기준으로 정렬합니다..." << endl;
+		sort(playerArr.begin(), playerArr.end(), [](Player& a, Player& b) {
+			return a.getId() < b.getId();
+			});
+		cout << "정렬을 완료했습니다." << endl;
+		auto [firstIdx, lastIdx] = equal_range(playerArr.begin(), playerArr.end(), targetId, PlayerIdComp());
+		printIdx(firstIdx, lastIdx);
+		cout << "=============ID기준 정렬 끝===============" << endl;
 
-	cout << *searchPlayer << endl; //460096640
+		cout << endl;
+
+		cout << "=============Name기준 정렬===============" << endl;
+		cout << "name 기준으로 정렬합니다..." << endl;
+		sort(playerArr.begin(), playerArr.end(), [](Player& a, Player& b) {
+			return a.getName() < b.getName();
+			});
+		cout << "정렬을 완료했습니다." << endl;
+		auto searchPlayer = find_if(playerArr.begin(), playerArr.end(), [targetId](const Player& player) {
+			return player.getId() == targetId;
+			});
+		printIdx(searchPlayer);
+		cout << "=============Name기준 정렬 끝===============" << endl;
+
+		cout << endl;
+
+		cout << "=============Score기준 정렬===============" << endl;
+		cout << "score 기준으로 정렬합니다..." << endl;
+		sort(playerArr.begin(), playerArr.end(), [](Player& a, Player& b) {
+			return a.getScore() < b.getScore();
+			});
+		cout << "정렬을 완료했습니다." << endl;
+		searchPlayer = find_if(playerArr.begin(), playerArr.end(), [targetId](const Player& player) {
+			return player.getId() == targetId;
+			});
+		printIdx(searchPlayer);
+		cout << "=============Score기준 정렬 끝===============" << endl;
+		cout << "\n------------------------LOOP 끝------------------------\n" << endl;
+	}
 }
