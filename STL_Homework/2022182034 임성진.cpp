@@ -66,7 +66,6 @@ private:
 };
 
 struct PlayerIdComp {
-	bool operator()(const Player& a, const Player& b) const { return a.getId() < b.getId(); }
 	bool operator()(const Player& a, const size_t& b) const { return a.getId() < b; }
 	bool operator()(const size_t& a, const Player& b) const { return a < b.getId(); }
 };
@@ -96,10 +95,12 @@ void printIdx(const auto& searchPlayer)
 	if (searchPlayer != playerArr.begin()){
 		cout << *(searchPlayer - 1) << endl;
 	}
+	else cout << "입력하신 id가 제일 앞의 객체입니다." << endl;
 	cout << *searchPlayer << endl;
 	if (searchPlayer != playerArr.end()) {
 		cout << *(searchPlayer + 1) << endl;
 	}
+	else cout << "입력하신 id가 마지막 객체입니다." << endl;
 }
 
 int main()
@@ -206,6 +207,12 @@ int main()
 			return a.getId() < b.getId();
 			});
 		cout << "정렬을 완료했습니다." << endl;
+		bool isExist = binary_search(playerArr.begin(), playerArr.end(), targetId, PlayerIdComp());
+		if (not isExist) {
+			cout << "해당 ID(" << targetId << ")를 찾을 수 없습니다." << endl;
+			cout << "\n------------------------LOOP 끝------------------------\n" << endl;
+			continue;
+		}
 		auto [firstIdx, lastIdx] = equal_range(playerArr.begin(), playerArr.end(), targetId, PlayerIdComp());
 		printIdx(firstIdx, lastIdx);
 		cout << "=============ID기준 정렬 끝===============" << endl;
