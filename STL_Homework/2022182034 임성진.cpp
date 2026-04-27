@@ -148,7 +148,7 @@ int main()
 	cout << "[답]" << endl;
 	unordered_map<size_t, vector<size_t>> idMap;
 	for (size_t i = 0; i < playerArr.size(); ++i) {
-		idMap[playerArr[i].getId()].push_back(i);
+		idMap[playerArr[i].getId()].emplace_back(i);
 	}
 
 	ofstream out{ "같은아이디.txt" };

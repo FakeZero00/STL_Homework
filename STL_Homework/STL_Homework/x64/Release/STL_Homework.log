@@ -1,7 +1,6 @@
 ﻿  2022182034 임성진.cpp
   코드를 생성하고 있습니다.
-  60 of 1269 functions ( 4.7%) were compiled, the rest were copied from previous compilation.
-    41 functions were new in current compilation
-    23 functions had inline decision re-evaluated but remain unchanged
+  Previous IPDB was built with incompatible compiler, fall back to full compilation.
+  All 1278 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   코드를 생성했습니다.
-  STL_Homework.vcxproj -> C:\Users\sjlim\Desktop\Git\STL_Homework\STL_Homework\x64\Release\STL_Homework.exe
+  STL_Homework.vcxproj -> C:\Users\USER\Desktop\Univercity_Homework\STL_Homework\STL_Homework\x64\Release\STL_Homework.exe
